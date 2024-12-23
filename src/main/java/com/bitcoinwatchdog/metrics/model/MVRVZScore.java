@@ -2,8 +2,11 @@ package com.bitcoinwatchdog.metrics.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MVRVZScore extends BaseMetric{
 
+	@JsonProperty("mvrvZscore")
 	private String mvrvz;
 	
 	public String getMvrvz() {

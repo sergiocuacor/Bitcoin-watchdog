@@ -1,0 +1,15 @@
+com/bitcoinwatchdog/metrics/client/MetricsApiClient$3.class
+com/bitcoinwatchdog/metrics/client/MetricsApiClient$1.class
+com/bitcoinwatchdog/metrics/model/NUPL.class
+com/bitcoinwatchdog/metrics/model/BaseMetric.class
+com/bitcoinwatchdog/metrics/service/MetricsService.class
+com/bitcoinwatchdog/BitcoinWatchdogApplication.class
+com/bitcoinwatchdog/config/ApiConfig.class
+com/bitcoinwatchdog/metrics/model/MVRVZScore.class
+com/bitcoinwatchdog/metrics/model/PuellMultiple.class
+com/bitcoinwatchdog/exception/MetricsApiException.class
+com/bitcoinwatchdog/metrics/client/MetricsApiClient$2.class
+com/bitcoinwatchdog/notification/EmailService.class
+com/bitcoinwatchdog/notification/EmailSendException.class
+com/bitcoinwatchdog/metrics/client/MetricsApiClient.class
+com/bitcoinwatchdog/config/EmailConfig.class

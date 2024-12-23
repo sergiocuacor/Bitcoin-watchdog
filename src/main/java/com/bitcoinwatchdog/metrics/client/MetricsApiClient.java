@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -20,6 +22,8 @@ import com.bitcoinwatchdog.metrics.model.PuellMultiple;
 @Component
 public class MetricsApiClient {
 
+	private static final Logger logger = LoggerFactory.getLogger(MetricsApiClient.class);
+	
 	private final WebClient webClient;	
 	private final String baseUrl;
 	
@@ -30,31 +34,40 @@ public class MetricsApiClient {
 	
 	public List<PuellMultiple> getPuellMultiple(LocalDate date){
 		String url = buildUrl("/puell-multiple", date);
-		
-		return webClient.get()
-	            .uri(url)
-	            .retrieve()
-	            .bodyToMono(new ParameterizedTypeReference<List<PuellMultiple>>() {})
-	            .block(Duration.ofSeconds(10));
+	    logger.info("Calling API: {}", url);
+	    
+	    List<PuellMultiple> response = webClient.get()
+	        .uri(url)
+	        .retrieve()
+	        .bodyToMono(new ParameterizedTypeReference<List<PuellMultiple>>() {})
+	        .block(Duration.ofSeconds(10));
+	        
+	    logger.info("Puell API response: {}", response);
+	    return response;
 	}
 	
 	public List<NUPL> getNUPL(LocalDate date) {
         String url = buildUrl("/nupl", date);
-        return webClient.get()
-            .uri(url)
-            .retrieve()
-            .bodyToMono(new ParameterizedTypeReference<List<NUPL>>() {})
-            .block(Duration.ofSeconds(10));
+        List<NUPL> response = webClient.get()
+    	        .uri(url)
+    	        .retrieve()
+    	        .bodyToMono(new ParameterizedTypeReference<List<NUPL>>() {})
+    	        .block(Duration.ofSeconds(10));
+    	        
+    	    logger.info("NUPL API response: {}", response);
+    	    return response;
     }
 	
     public List<MVRVZScore> getMVRVZ(LocalDate date) {
         String url = buildUrl("/mvrv-zscore", date);
-        return webClient.get()
-        		.uri(url)
-        		.retrieve()
-        		.bodyToMono(new ParameterizedTypeReference<List<MVRVZScore>>() {
-				})
-        		.block(Duration.ofSeconds(10));
+        List<MVRVZScore> response = webClient.get()
+    	        .uri(url)
+    	        .retrieve()
+    	        .bodyToMono(new ParameterizedTypeReference<List<MVRVZScore>>() {})
+    	        .block(Duration.ofSeconds(10));
+    	        
+    	    logger.info("MVRV-Z Score API response: {}", response);
+    	    return response;
     }
 
 	

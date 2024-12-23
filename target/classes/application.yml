@@ -1,6 +1,7 @@
 api:
   base:
-    url: https://bitcoin-data.com/v1
+    url: https://bitcoin-data.com/v1  
+
 spring:
   mail:
     host: smtp.gmail.com
@@ -13,7 +14,3 @@ spring:
           auth: true
           starttls:
           enable: true
-
-email:
-  from: ${EMAIL_USERNAME}
-  to: btcwatchdog_alerts@gmail.com

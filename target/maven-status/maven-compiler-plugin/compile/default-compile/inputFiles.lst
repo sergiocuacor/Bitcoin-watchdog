@@ -1,0 +1,12 @@
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/BitcoinWatchdogApplication.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/config/ApiConfig.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/config/EmailConfig.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/exception/MetricsApiException.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/metrics/client/MetricsApiClient.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/metrics/model/BaseMetric.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/metrics/model/MVRVZScore.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/metrics/model/NUPL.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/metrics/model/PuellMultiple.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/metrics/service/MetricsService.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/notification/EmailSendException.java
+/Users/sergiocc/Documents/Bitcoin-watchdog/src/main/java/com/bitcoinwatchdog/notification/EmailService.java

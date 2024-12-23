@@ -15,10 +15,10 @@ public class EmailService {
 	// Spring inyectará el JavaMailSender configurado
 	private final JavaMailSender emailSender;
 	
-	@Value("${email.from}")
+	@Value("${spring.mail.username}")
 	private String fromEmail;
 	
-	@Value("${email.to}")
+	@Value("${spring.mail.password}")
 	private String toEmail;
 	
 	public EmailService(JavaMailSender emailSender) {
