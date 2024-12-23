@@ -1,3 +1,19 @@
 api:
   base:
     url: https://bitcoin-data.com/v1
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+          enable: true
+
+email:
+  from: ${EMAIL_USERNAME}
+  to: btcwatchdog_alerts@gmail.com

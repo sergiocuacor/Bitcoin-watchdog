@@ -21,7 +21,7 @@ public class MetricsService {
 	
 		private static final double PUELL_MULTIPLE_THRESHOLD = 0.6;
 	    private static final double NUPL_THRESHOLD = 0.2;
-	    private static final double MVRV_THRESHOLD = -0.5;
+	    private static final double MVRVZ_THRESHOLD = -0.5;
 	
 	// Inyección de dependencias: Spring inyectará automáticamente una instancia de MetricsApiClient
     // Esta es una buena práctica porque:
@@ -58,18 +58,49 @@ public class MetricsService {
 	}
 	
     // Método privado que evalúa las métricas y decide si hay señal
-	private void evaluateMetrics(PuellMultiple puell, NUPL nupl, MVRVZ mvrvz) {
+	private void evaluateMetrics(PuellMultiple puell, NUPL nupl, MVRVZScore mvrvz) {
 		// Convertimos los valores de String a double
         // Nota: En un código más robusto, deberíamos manejar posibles NumberFormatException
         double puellValue = Double.parseDouble(puell.getPuellMultiple());
         double nuplValue = Double.parseDouble(nupl.getNupl());
-        double mvrvValue = Double.parseDouble(mvrv.getMvrv());
+        double mvrvzValue = Double.parseDouble(mvrvz.getMvrvz());
 
         // Evaluamos cada métrica contra su umbral
         boolean isPuellBullish = puellValue < PUELL_MULTIPLE_THRESHOLD;
         boolean isNuplBullish = nuplValue < NUPL_THRESHOLD;
-        boolean isMvrvBullish = mvrvValue < MVRV_THRESHOLD;
+        boolean isMvrvzBullish = mvrvzValue < MVRVZ_THRESHOLD;
 
+     // Log de los valores actuales para debugging
+        logger.info("Metrics values - Puell: {}, NUPL: {}, MVRV: {}", 
+                   puellValue, nuplValue, mvrvzValue);
+
+        // Si todas las métricas indican señal alcista, procedemos
+        if (isPuellBullish && isNuplBullish && isMvrvzBullish) {
+            sendBullishSignal(puell, nupl, mvrvz);
+        }
+        
+     
 	}
+	
+	// Método que maneja la señal alcista cuando se detecta
+    private void sendBullishSignal(PuellMultiple puell, NUPL nupl, MVRVZScore mvrv) {
+        // Creamos un mensaje detallado usando text block (Java 15+)
+        String message = String.format("""
+            Bullish signal detected!
+            Date: %s
+            Puell Multiple: %s (threshold: %s)
+            NUPL: %s (threshold: %s)
+            MVRVZ: %s (threshold: %s)
+            """,
+            puell.getDate(),
+            puell.getPuellMultiple(), PUELL_MULTIPLE_THRESHOLD,
+            nupl.getNupl(), NUPL_THRESHOLD,
+            mvrv.getMvrvz(), MVRVZ_THRESHOLD
+        );
+        
+        // Registramos la señal
+        logger.info(message);
+        // TODO: Aquí posteriormente añadiremos la llamada al servicio de notificaciones
+    }
 	
 }
