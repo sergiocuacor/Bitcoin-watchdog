@@ -1,6 +1,6 @@
 # Bitcoin Watchdog 🔍
 
-Bitcoin Watchdog is a monitoring system that tracks key Bitcoin network metrics and sends alerts when specific conditions are met. The application currently monitors three essential market indicators daily:
+Bitcoin Watchdog is a monitoring system built with Spring Boot that tracks key Bitcoin network metrics and sends alerts when specific conditions are met. The application currently monitors three essential market indicators daily:
 - Puell Multiple
 - MVRV-Z Score
 - NUPL (Net Unrealized Profit/Loss)
