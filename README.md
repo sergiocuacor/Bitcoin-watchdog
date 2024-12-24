@@ -146,8 +146,7 @@ scripts\run-watchdog.bat
 - `MVRVZScore`: MVRV-Z Score data
 
 2. **API Client** (`com.bitcoinwatchdog.metrics.client`)
-- `MetricsApiClient`: Handles HTTP calls to bitcoin-data.com API
-- Uses WebClient for reactive HTTP requests
+- `MetricsApiClient`: Handles HTTP calls to an external API, in this case bitcoin-data.com/v1
 - Endpoints:
   - `/puell-multiple`
   - `/nupl`
