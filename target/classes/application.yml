@@ -14,3 +14,9 @@ spring:
           auth: true
           starttls:
           enable: true
+          required: true
+        transport:
+          protocol: smtp
+        debug: true
+    protocol: smtp
+    test-connection: true

@@ -1,0 +1,17 @@
+# src/test/resources/application.yml
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: test@example.com
+    password: test-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+api:
+  base:
+    url: http://test.example.com
