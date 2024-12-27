@@ -23,21 +23,20 @@ public class MetricsService implements CommandLineRunner {
 		try {
 			logger.info("Starting Bitcoin watchdog analysis..");
 			checkDailyMetrics();
-		}finally {
+		} finally {
 			logger.info("Analysis completed, shutting down..");
-            System.exit(0);
-        }
-		
-		
+			System.exit(0);
+		}
+
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(MetricsService.class);
 
 	private final EmailService emailService;
 	// TODO: ULTRA BULLISH THRESHOLDS
-	private static final double PUELL_MULTIPLE_THRESHOLD = 5;//0.6
-	private static final double NUPL_THRESHOLD = 5;//0.2
-	private static final double MVRVZ_THRESHOLD = 5;//0.5
+	private static final double PUELL_MULTIPLE_THRESHOLD = 5;// 0.6
+	private static final double NUPL_THRESHOLD = 5;// 0.2
+	private static final double MVRVZ_THRESHOLD = 5;// 0.5
 
 	// Inyección de dependencias: Spring inyectará automáticamente una instancia de
 	// MetricsApiClient

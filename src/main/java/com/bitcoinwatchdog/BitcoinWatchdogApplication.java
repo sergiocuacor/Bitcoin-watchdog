@@ -9,8 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class BitcoinWatchdogApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BitcoinWatchdogApplication.class, args)
-		.close();
+		SpringApplication.run(BitcoinWatchdogApplication.class, args).close();
 	}
 
 }
