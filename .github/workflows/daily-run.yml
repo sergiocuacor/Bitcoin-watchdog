@@ -2,7 +2,7 @@ name: Daily Bitcoin Watchdog Run
 
 on:
   schedule:
-    - cron: '30 15 * * *'
+    - cron: '0 19 * * *'
   workflow_dispatch:
 
 jobs:
