@@ -20,10 +20,15 @@ public class MetricsService implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		logger.info("Starting Bitcoin watchdog analysis..");
-		checkDailyMetrics();
+		try {
+			logger.info("Starting Bitcoin watchdog analysis..");
+			checkDailyMetrics();
+		}finally {
+			logger.info("Analysis completed, shutting down..");
+            System.exit(0);
+        }
 		
-		logger.info("Analysis completed, shutting down..");
+		
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(MetricsService.class);

@@ -6,11 +6,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-//@PropertySource("file:.env")
 public class BitcoinWatchdogApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BitcoinWatchdogApplication.class, args);
+		SpringApplication.run(BitcoinWatchdogApplication.class, args)
+		.close();
 	}
 
 }
