@@ -1,16 +1,9 @@
 name: Daily Bitcoin Watchdog Run
 
 on:
-  push:
-    branches: [ main ]
   schedule:
     - cron: '0 21 * * *'
   workflow_dispatch:
-    inputs:
-      reason:
-        description: 'Reason for manual run'
-        required: false
-        default: 'Manual test'
 
 jobs:
   run-watchdog:
@@ -28,8 +21,21 @@ jobs:
     - name: Build with Maven
       run: mvn clean package
         
+    - name: List target directory
+      run: |
+        echo "Contents of target directory:"
+        ls -la target/
+        
+    - name: Find JAR file
+      run: |
+        echo "Looking for JAR files:"
+        find . -name "*.jar"
+        
     - name: Run Watchdog
       env:
         EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-      run: java -jar target/bitcoin-watchdog.jar
+      run: |
+        JAR_FILE=$(find target/ -name "*.jar" ! -name "*sources.jar" ! -name "*javadoc.jar" | head -1)
+        echo "Found JAR file: $JAR_FILE"
+        java -jar "$JAR_FILE"
