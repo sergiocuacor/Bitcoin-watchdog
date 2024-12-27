@@ -2,8 +2,8 @@ name: Daily Bitcoin Watchdog Run
 
 on:
   schedule:
-    - cron: '0 21 * * *'  # Runs at 21:00 UTC daily
-  workflow_dispatch:  # Allows manual trigger from GitHub UI
+    - cron: '0 21 * * *'
+  workflow_dispatch:
 
 jobs:
   run-watchdog:
@@ -22,8 +22,26 @@ jobs:
     - name: Build with Maven
       run: mvn clean package
         
+    - name: Print Environment Variables (masked)
+      run: |
+        echo "Email username is configured: ${{ secrets.EMAIL_USERNAME != '' }}"
+        echo "Email password is configured: ${{ secrets.EMAIL_PASSWORD != '' }}"
+        
     - name: Run Watchdog
       env:
         EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-      run: java -jar target/bitcoin-watchdog.jar
+      run: |
+        echo "Starting application..."
+        java -jar target/bitcoin-watchdog.jar
+        echo "Application finished"
+
+    - name: Check application logs
+      if: always()
+      run: |
+        echo "Checking for log files..."
+        ls -la
+        if [ -f "application.log" ]; then
+          echo "Application log contents:"
+          cat application.log
+        fi

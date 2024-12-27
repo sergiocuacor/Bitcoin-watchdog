@@ -15,8 +15,15 @@ spring:
           starttls:
           enable: true
           required: true
+          ssl:
+            trust: smtp.gmail.com
         transport:
           protocol: smtp
         debug: true
     protocol: smtp
     test-connection: true
+
+logging:
+  level:
+    org.springframework.mail: DEBUG
+    com.bitcoinwatchdog: DEBUG
