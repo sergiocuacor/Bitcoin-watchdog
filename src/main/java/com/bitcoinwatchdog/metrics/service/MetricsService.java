@@ -38,15 +38,10 @@ public class MetricsService implements CommandLineRunner {
 	private static final double NUPL_THRESHOLD = 5;// 0.2
 	private static final double MVRVZ_THRESHOLD = 5;// 0.5
 
-	// Inyección de dependencias: Spring inyectará automáticamente una instancia de
-	// MetricsApiClient
-	// Esta es una buena práctica porque:
-	// 1. Hace el código más testeable
-	// 2. Sigue el principio de inversión de dependencias
+	
 	private final MetricsApiClient metricsApiClient;
 
-	// Constructor que Spring usará para inyectar las dependencias
-	// Al ser el único constructor, no necesita @Autowired (es implícito)
+	
 	public MetricsService(MetricsApiClient metricsApiClient, EmailService emailService) {
 		this.metricsApiClient = metricsApiClient;
 		this.emailService = emailService;
@@ -58,7 +53,7 @@ public class MetricsService implements CommandLineRunner {
 		LocalDate yesterday = LocalDate.now().minusDays(1);
 		logger.info("Checking metrics for date: {}", yesterday);
 
-		// La API está diseñada de tal forma que devuelve arrays de objetos
+		
 		List<PuellMultiple> puellMultipleList = metricsApiClient.getPuellMultiple(yesterday);
 		List<MVRVZScore> mvrvzList = metricsApiClient.getMVRVZ(yesterday);
 		List<NUPL> nuplList = metricsApiClient.getNUPL(yesterday);
