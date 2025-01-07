@@ -1,6 +1,5 @@
 # Bitcoin Watchdog 🔍
-
-Bitcoin Watchdog is a monitoring system built with Spring Boot that tracks key Bitcoin network metrics and sends alerts when specific conditions are met. The application currently monitors three essential market indicators daily:
+Bitcoin Watchdog is a Java application that analyzes key Bitcoin market metrics daily and alerts users when specific market conditions are met. Built with Spring Boot and scheduled through GitHub Actions, it evaluates three essential market indicators:
 - Puell Multiple
 - MVRV-Z Score
 - NUPL (Net Unrealized Profit/Loss)
@@ -8,166 +7,135 @@ Bitcoin Watchdog is a monitoring system built with Spring Boot that tracks key B
 ## Table of Contents
 - [Features](#features)
 - [Prerequisites](#prerequisites)
-- [Installation](#installation)
+- [Setup](#setup)
+- [GitHub Actions Workflow](#github-actions-workflow)
 - [Configuration](#configuration)
   - [Email Settings](#email-settings)
   - [Alert Thresholds](#alert-thresholds)
-- [Scheduling](#scheduling)
-  - [macOS](#macos)
-  - [Linux](#linux)
-  - [Windows](#windows)
+  - [Application Properties](#application-properties)
 - [Usage](#usage)
-  - [Manual Execution](#manual-execution)
+  - [Cloud Execution](#cloud-execution)
+  - [Local Development](#local-development)
 - [Architecture](#architecture)
   - [Core Components](#core-components)
-- [Configuration](#configuration-1)
-  - [Application Properties](#application-properties)
-  - [Environment Variables](#environment-variables-env)
+
 
 ## Features 
+- Daily analysis of Bitcoin network metrics
 - Customizable alert thresholds
-- Email notifications for significant market conditions
-- Automated daily execution (macOS → Launchd, Linux → cron, Windows → Task Scheduler)
+- Email alerts when metrics fall below defined thresholds
+- Automated daily execution through GitHub Actions
 - Detailed logging
+
 
 ## Prerequisites
 - Java 17 or higher
 - Maven
 - Gmail account (for notifications)
+- GitHub account
 
-## Installation 
+
+## Setup
+
 1. **Clone the repository**
 ```bash
 git clone https://github.com/sergiocuacor/bitcoin-watchdog.git
 cd bitcoin-watchdog
 ```
 
-2. **Configure environment variables**
-```bash
-# Copy the template and edit with your values
-cp .env.template .env
-```
 
-3. **Build the application**
+2. **Configure GitHub Secrets**
+- Fork this repository
+- Go to Settings → Secrets and variables → Actions
+- Add the following secrets:
+  ```
+  EMAIL_USERNAME: your Gmail address
+  EMAIL_PASSWORD: your Gmail app password
+  ```
+
+
+3. **Build for local testing** (optional)
 ```bash
+cp .env.template .env
+# Edit .env with your credentials
 mvn clean package
 ```
+
+
+## GitHub Actions Workflow
+
+The application uses GitHub Actions for automated execution. Have a look at `.github/workflows/daily-run.yml`:
+
+```yaml
+name: Daily Bitcoin Watchdog Run
+
+on:
+  schedule:
+    - cron: '0 19 * * *'  # Runs daily at 19:00 UTC
+  workflow_dispatch:       # Allows manual execution
+
+jobs:
+  run-watchdog:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Build with Maven
+      run: mvn clean package
+        
+    - name: List target directory
+      run: |
+        echo "Contents of target directory:"
+        ls -la target/
+        
+    - name: Find JAR file
+      run: |
+        echo "Looking for JAR files:"
+        find . -name "*.jar"
+        
+    - name: Run Watchdog
+      env:
+        EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      run: |
+        JAR_FILE=$(find target/ -name "*.jar" ! -name "*sources.jar" ! -name "*javadoc.jar" | head -1)
+        echo "Found JAR file: $JAR_FILE"
+        java -jar "$JAR_FILE"
+```
+
+This workflow:
+- Runs automatically at 19:00 UTC daily
+- Can be triggered manually through the Actions tab
+- Uses Ubuntu as the execution environment
+- Sets up Java 17 and builds the project
+- Uses GitHub Secrets for secure credential management
+
 
 ## Configuration
 
 ### Email Settings
-Create a Gmail App Password and configure it in your `.env` file (see `.env.template`):
+For cloud execution, configure through GitHub Secrets as described in the Setup section.
+
+For local development, create a `.env` file based on the template:
 ```properties
 EMAIL_USERNAME=your_email@gmail.com
 EMAIL_PASSWORD=your_app_specific_password
 ```
 
 ### Alert Thresholds
-Current default thresholds:
+Default thresholds:
 ```
 Puell Multiple: < 0.6
 NUPL: < 0.2
 MVRV-Z Score: < 0.5
 ```
-
-## Scheduling
-
-> **Note:** To avoid consuming unnecessary resources, we configure a schedule for the program to execute.
-> By default, it runs once a day, with a 1-day delay to avoid inaccurate values from the external API.
-> This shouldn't be a concern for decision-making given that the conditions evaluated often give market participants weeks or months to act on them.
-
-### macOS
-Using launchd:
-```bash
-# Create a .plist file within ~/Library/LaunchAgents/
-# Then configure it with your paths
-```
-```xml
-<!-- ~/Library/LaunchAgents/com.bitcoinwatchdog.plist -->
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.bitcoinwatchdog</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/path/to/Bitcoin-watchdog/scripts/run-watchdog.sh</string>
-    </array>
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>21</integer>
-        <key>Minute</key>
-        <integer>0</integer>
-    </dict>
-</dict>
-</plist>
-```
-```bash
-# Lastly, load the service:
-launchctl load ~/Library/LaunchAgents/com.bitcoinwatchdog.plist
-```
-
-### Linux
-Using cron:
-```bash
-# Add to crontab (runs at 21:00 daily)
-0 21 * * * /path/to/bitcoin-watchdog/scripts/run-watchdog.sh
-```
-
-### Windows
-Using Task Scheduler:
-1. Open Task Scheduler
-2. Create Basic Task
-3. Set trigger: Daily at your preferred time (21:00 by default)
-4. Action: Start Program
-5. Program/script: path to run-watchdog.bat
-
-## Usage
-
-### Manual Execution
-```bash
-# Unix-like systems
-./scripts/run-watchdog.sh
-
-# Windows
-scripts\run-watchdog.bat
-```
-
-## Architecture
-
-### Core Components
-
-1. **Models** (`com.bitcoinwatchdog.metrics.model`)
-- `BaseMetric`: Abstract base class for all metrics
-- `PuellMultiple`: Puell Multiple indicator data
-- `NUPL`: Net Unrealized Profit/Loss data
-- `MVRVZScore`: MVRV-Z Score data
-
-2. **API Client** (`com.bitcoinwatchdog.metrics.client`)
-- `MetricsApiClient`: Handles HTTP calls to an external API, in this case bitcoin-data.com/v1
-- Endpoints:
-  - `/puell-multiple`
-  - `/nupl`
-  - `/mvrv-zscore`
-
-3. **Service Layer** (`com.bitcoinwatchdog.metrics.service`)
-- `MetricsService`: Core business logic
-  - Fetches daily metrics
-  - Evaluates conditions
-  - Triggers alerts
-- Alert Thresholds:
-  ```java
-  PUELL_MULTIPLE_THRESHOLD = 0.6
-  NUPL_THRESHOLD = 0.2
-  MVRVZ_THRESHOLD = -0.5
-  ```
-
-4. **Notification** (`com.bitcoinwatchdog.notification`)
-- `EmailService`: Handles email notifications using Gmail SMTP
-
-## Configuration
 
 ### Application Properties
 ```yaml
@@ -190,11 +158,53 @@ spring:
             enable: true
 ```
 
-### Environment Variables (.env)
-```properties
-EMAIL_USERNAME=app_email@gmail.com
-EMAIL_PASSWORD=gmail_app_specific_password
+
+## Usage
+
+### Cloud Execution
+The application runs automatically through GitHub Actions:
+- Scheduled daily at 19:00 UTC
+- View execution history in the Actions tab
+- Email notifications for significant market conditions
+- Can be manually triggered from the Actions tab for testing
+
+### Local Development
+For testing and development purposes:
+```bash
+./scripts/run-watchdog.sh
 ```
+The script will:
+- Check for environment variables
+- Find and execute the correct JAR file
+- Display relevant logs
+
+
+## Architecture
+
+### Core Components
+
+1. **Models** (`com.bitcoinwatchdog.metrics.model`)
+- `BaseMetric`: Abstract base class for all metrics
+- `PuellMultiple`: Puell Multiple indicator data
+- `NUPL`: Net Unrealized Profit/Loss data
+- `MVRVZScore`: MVRV-Z Score data
+  
+2. **API Client** (`com.bitcoinwatchdog.metrics.client`)
+- `MetricsApiClient`: Handles HTTP calls to the external API
+- Endpoints:
+  - `/puell-multiple`
+  - `/nupl`
+  - `/mvrv-zscore`
+
+3. **Service Layer** (`com.bitcoinwatchdog.metrics.service`)
+- `MetricsService`: Core business logic
+  - Fetches daily metrics
+  - Evaluates conditions
+  - Triggers alerts
+
+4. **Notification** (`com.bitcoinwatchdog.notification`)
+- `EmailService`: Handles email notifications using Gmail SMTP
+
 
 ---
 
