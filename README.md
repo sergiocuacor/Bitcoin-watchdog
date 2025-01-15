@@ -110,14 +110,6 @@ jobs:
         java -jar "$JAR_FILE"
 ```
 
-This workflow:
-- Runs automatically at 19:00 UTC daily
-- Can be triggered manually through the Actions tab
-- Uses Ubuntu as the execution environment
-- Sets up Java 17 and builds the project
-- Uses GitHub Secrets for secure credential management
-
-
 ## Configuration
 
 ### Email Settings
